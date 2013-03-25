@@ -15,7 +15,7 @@ class paypal{
     * Handles oauth 2 bearer token fetch
     * @link https://developer.paypal.com/webapps/developer/docs/api/#authentication--headers
     */
-    public function __construct($state){
+    public function __construct(){
         $postvals = "grant_type=client_credentials";
         $uri = URI_SANDBOX . "oauth2/token";
         
@@ -33,7 +33,7 @@ class paypal{
     public function process_payment($request){
         $postvals = $request;
         $uri = URI_SANDBOX . "payments/payment";
-        $response = self::curl($uri, 'POST', $postvals);
+        return self::curl($uri, 'POST', $postvals);
     }
     
     /**
@@ -44,7 +44,7 @@ class paypal{
     */
     public function refund_sale($sale_id){
         $uri = URI_SANDBOX . "payments/sale/$sale_id/refund";
-        $response = self::curl($uri, 'POST', '{}');
+        return self::curl($uri, 'POST', '{}');
     }
     
     /**
@@ -55,7 +55,7 @@ class paypal{
     */
     public function store_cc($cc_object){
         $uri = URI_SANDBOX . "vault/credit-card";
-        $response = self::curl($uri, 'POST', json_encode($cc_object));
+        return self::curl($uri, 'POST', json_encode($cc_object));
     }
     
     /**
