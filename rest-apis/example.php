@@ -32,16 +32,22 @@ $request = '{
   ]
 }';
 
-//$paypal->process_payment($request);
+//print_r($paypal->process_payment($request));
 
-/*$credit_card = array("type" => "visa",
+$credit_card = array("type" => "visa",
                      "number" => "4417119669820331",
                      "expire_month" => "11",
                      "expire_year" => "2018",
                      "first_name" => "Joe",
                      "last_name" => "Shopper");
 
-$paypal->store_cc($credit_card);*/
+//print_r($paypal->store_cc($credit_card));
+
+//$ccid = "CARD-35Y54265JC7133454KFM5G4I";
+//print_r($paypal->fetch_cc($ccid));
+
+//$id = "PAY-5JH752195H683312PKFM5GNI";
+//print_r($paypal->fetch_single_payment($id));
 
 /*$sale_id = "8RV385008S218341G";
 $paypal->refund_sale($sale_id);*/

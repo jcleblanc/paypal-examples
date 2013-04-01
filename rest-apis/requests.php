@@ -1,6 +1,6 @@
 <?php
 define("CLIENT_ID", "YOUR CLIENT ID");
-define("CLIENT_SECRET", "YOUR SECRET");
+define("CLIENT_SECRET", "YOUR CLIENT SECRET");
 
 define("URI_SANDBOX", "https://api.sandbox.paypal.com/v1/");
 define("URI_LIVE", "https://api.paypal.com/v1/");
@@ -112,7 +112,7 @@ class paypal{
     * Fetches a credit card object from the vault
     * @link https://developer.paypal.com/webapps/developer/docs/api/#look-up-a-stored-credit-card
     */
-    public function store_cc($cc_id){
+    public function fetch_cc($cc_id){
         $uri = URI_SANDBOX . "vault/credit-card/$cc_id";
         return self::curl($uri, 'GET');
     }
@@ -139,23 +139,22 @@ class paypal{
             $headers = array("Content-Type:application/json", "Authorization:{$this->token_type} {$this->access_token}");
         }
            
-        if ($method == 'GET'){
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        } else {
-            $options = array(
-                CURLOPT_HEADER => true,
-                CURLINFO_HEADER_OUT => true,
-                CURLOPT_VERBOSE => true,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POSTFIELDS => $postvals,
-                CURLOPT_CUSTOMREQUEST => $method,
-                CURLOPT_TIMEOUT => 10
-            );
+        $options = array(
+            CURLOPT_HEADER => true,
+            CURLINFO_HEADER_OUT => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_VERBOSE => true,
+            CURLOPT_TIMEOUT => 10
+        );
             
-            curl_setopt_array($ch, $options);
+            
+        if ($method == 'POST'){
+            $options[CURLOPT_POSTFIELDS] = $postvals;
+            $options[CURLOPT_CUSTOMREQUEST] = $method;
         }
+        
+        curl_setopt_array($ch, $options);
            
         $response = curl_exec($ch);
         $header = substr($response, 0, curl_getinfo($ch,CURLINFO_HEADER_SIZE));
