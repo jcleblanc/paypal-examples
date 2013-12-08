@@ -74,6 +74,18 @@ class paypal{
     }
     
     /**
+    * Fetch Authorization
+    *
+    * Capture a previous payment authorization.  First need to call process_payment with an intent of "authorize"
+    * @link https://developer.paypal.com/webapps/developer/docs/api/#capture-an-authorization
+    */
+    public function capture_authorization($id, $request){
+        $postvals = $request;
+        $uri = URI_SANDBOX . "payments/authorization/$id/capture";
+        return self::curl($uri, 'POST', $postvals);
+    }
+    
+    /**
     * Refund Sale
     *
     * Refunds a previous payment
