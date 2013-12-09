@@ -4,7 +4,7 @@ require_once("requests.php");
 $paypal = new paypal();
 
 $request = '{
-  "intent": "sale",
+  "intent": "authorize",
   "payer": {
     "payment_method": "credit_card",
     "funding_instruments": [
@@ -32,7 +32,7 @@ $request = '{
   ]
 }';
 
-//print_r($paypal->process_payment($request));
+//print_r($paypal->process_cc_payment($request));
 
 $credit_card = array("type" => "visa",
                      "number" => "4417119669820331",
@@ -72,5 +72,44 @@ $request = '{
   ]
 }';
 
-//$paypal->process_payment($request);
+//print_r($paypal->process_cc_payment($request));
+
+$id = "03R11930R8906301G";
+$request = '{
+  "amount":{
+    "currency":"USD",
+    "total":"4.54"
+  },
+  "is_final_capture":true
+}';
+
+//print_r($paypal->capture_authorization($id, $request));
+
+if (isset($_COOKIE['id'])){
+    $request = '{ "payer_id" : "' . $_GET['PayerID'] . '" }';
+    print_r($paypal->execute_payment($_COOKIE['id'], $request));
+} else {
+    $request = '{
+      "intent": "sale",
+      "payer": {
+        "payment_method": "paypal"
+      },
+      "transactions": [
+        {
+          "amount": {
+            "total": "7.47",
+            "currency": "USD"
+          },
+          "description": "This is the payment transaction description."
+        }
+      ],
+      "redirect_urls": {
+        "return_url":"http://localhost/paypal/example.php",
+        "cancel_url":"http://localhost/paypal/example.php"
+      }
+    }';
+    
+    $paypal->process_pp_payment($request);
+}
+//print_r($redirect);
 ?>
