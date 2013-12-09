@@ -5,6 +5,7 @@ The PayPal PHP REST SDK is a wrapper on top of the PayPal REST APIs at https://d
 h2. Initiating your OAuth 2 access token session
 
 Before making any requests below, you first need to include the SDK and authenticate with the API.  At the top of your integration, simply include the following two lines:
+
 <notextile>
 <pre>
 require_once("requests.php");
@@ -19,6 +20,7 @@ Once you are authenticated, you may then make requests to any of the methods in 
 h3. Processing a payment with a credit card
 
 To process money from a credit card (behind the scenes without pushing to PayPal), create the payment / transaction object and invoke the *process_cc_payment* method.
+
 <notextile>
 <pre>
 $request = array(
@@ -53,6 +55,7 @@ h3. Processing a payment with PayPal
 
 To process money from PayPal, we need to build a redirect to PayPal that uses a cookie to store a payment ID before the redirect.  If the *id* cookie is set, it means that we are coming back from the redirect where the user has authorized the payment.  If that is the case, we simply invoke the *execute_payment* method to complete the transaction
 If that cookie does not exist, it means we have not pushed the user to PayPal to process the payment yet.  In this case, we simply build the payment / transaction object, with the places PayPal should redirect to complete the sale or cancel, and invoke the *process_pp_payment* method.
+
 <notextile>
 <pre>
 if (isset($_COOKIE['id'])){
@@ -85,6 +88,7 @@ if (isset($_COOKIE['id'])){
 h3. Making a payment authorization
 
 To authorize a payment for later capturing (holding the money for capturing at a later time), we use a very similar technique as with processing a credit card, but we change the *intent* in the request object to *authorize*, and invoke the *process_cc_payment* method.
+
 <notextile>
 <pre>
 $request = array(
@@ -118,6 +122,7 @@ print_r($paypal->process_cc_payment($request));
 h3. Capturing a pre-authorized payment
 
 To capture a payment that was already authorize (take the payment out of hold and transfer the funds) we simply set our request object, which includes the authorization ID (obtained from making an authorization payment), and call *capture_authorization*
+
 <notextile>
 <pre>
 $id = "4PR70582UT282945J";
@@ -132,6 +137,7 @@ print_r($paypal->capture_authorization($id, $request));
 h3. Store a credit card in the vault
 
 To store a credit card securely in the vault (and receive a lookup ID for it), set the credit card object and send it through to the *store_cc* method.
+
 <notextile>
 <pre>
 $credit_card = array("type" => "visa",
@@ -148,6 +154,7 @@ print_r($paypal->store_cc($credit_card));
 h3. Fetch a credit card reference from the vault
 
 To retrieve a credit card reference from the vault, we pass the credit card reference ID (obtained from storing the credit card) to the *fetch_cc* method.
+
 <notextile>
 <pre>
 $ccid = "CARD-35Y54265JC7133454KFM5G4I";
@@ -157,7 +164,8 @@ print_r($paypal->fetch_cc($ccid));
 
 h3. Look up information about a payment
 
-To look up state and transaction details about a payment, send the payment ID (obtained when making a payment request) to the *fetch_single_payment* method. 
+To look up state and transaction details about a payment, send the payment ID (obtained when making a payment request) to the *fetch_single_payment* method.
+
 <notextile>
 <pre>
 $id = "PAY-5JH752195H683312PKFM5GNI";
@@ -168,6 +176,7 @@ print_r($paypal->fetch_single_payment($id));
 h3. Refund a payment that was already made
 
 To refund a payment, send the sale ID (obtained when making a payment request) to the *refund_sale* method. 
+
 <notextile>
 <pre>
 $sale_id = "8RV385008S218341G";
