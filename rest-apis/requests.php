@@ -31,9 +31,8 @@ class paypal{
     * @link https://developer.paypal.com/webapps/developer/docs/api/#create-a-payment
     */
     public function process_cc_payment($request){
-        $postvals = $request;
         $uri = URI_SANDBOX . "payments/payment";
-        return self::curl($uri, 'POST', $postvals);
+        return self::curl($uri, 'POST', json_encode($request));
     }
     
     /**
@@ -43,24 +42,11 @@ class paypal{
     * @link https://developer.paypal.com/webapps/developer/docs/api/#create-a-payment
     */
     public function process_pp_payment($request){
-        $postvals = $request;
         $uri = URI_SANDBOX . "payments/payment";
-        $response = self::curl($uri, 'POST', $postvals);
+        $response = self::curl($uri, 'POST', json_encode($request));
         $redirect = $response['body']->links[1]->href;
         setcookie("id", $response['body']->id, time() + 3600);
         header('Location: ' . $redirect);
-    }
-    
-    /**
-    * Process Approved Payment
-    *
-    * Processes an approved PayPal or credit car d payment
-    * @link https://developer.paypal.com/webapps/developer/docs/api/#execute-an-approved-paypal-payment
-    */
-    public function process_approved_payment($id, $request){
-        $postvals = $request;
-        $uri = URI_SANDBOX . "payments/payment/$id/execute";
-        return self::curl($uri, 'POST', $postvals);
     }
     
     /**
@@ -95,10 +81,9 @@ class paypal{
     * @link https://developer.paypal.com/webapps/developer/docs/api/#execute-an-approved-paypal-payment
     */
     public function execute_payment($id, $request){
-        $postvals = $request;
         $uri = URI_SANDBOX . "payments/payment/$id/execute/";
         setcookie("id","", time() - 3600);
-        return self::curl($uri, 'POST', $postvals);
+        return self::curl($uri, 'POST', json_encode($request));
     }
     
     /**
@@ -108,9 +93,8 @@ class paypal{
     * @link https://developer.paypal.com/webapps/developer/docs/api/#capture-an-authorization
     */
     public function capture_authorization($id, $request){
-        $postvals = $request;
         $uri = URI_SANDBOX . "payments/authorization/$id/capture";
-        return self::curl($uri, 'POST', $postvals);
+        return self::curl($uri, 'POST', json_encode($request));
     }
     
     /**
