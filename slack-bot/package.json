@@ -1,0 +1,16 @@
+{
+    "name": "slack-paypal",
+    "version": "1.0.0",
+    "description": "PayPal Slack bot tutorial",
+    "main": "bot_paypal.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": ["paypal", "slack", "bot", "subscription", "payment"],
+    "author": "Jonathan LeBlanc",
+    "license": "MIT",
+    "dependencies": {
+        "botkit": "^0.2.2",
+        "paypal-rest-sdk": "^1.6.9"
+    }
+}
