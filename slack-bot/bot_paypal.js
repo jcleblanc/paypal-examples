@@ -196,7 +196,7 @@ controller.on('interactive_message_callback', function(bot, message){
                 break;
             //process subscription
             case '333': 
-                var billingPlan = 'P-19P00754LT530610YT3XO7TY';
+                var billingPlan = 'YOUR ACTIVATED BILLING PLAN ID';
                 
                 //build isodate for billing agreement
                 var isoDate = new Date();

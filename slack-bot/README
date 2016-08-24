@@ -1,0 +1,80 @@
+To set up this tutorial bot, please use the following steps to create your apps and set up the bot.
+
+## Create Your Applications
+
+You'll need to create two applications (a Slack bot and PayPal app) to set up the Slack bot and get the OAuth credentials you'll need to launch the bot. 
+
+### Create Slack app
+
+Use the following steps:
+
+* Go to https://api.slack.com/apps and create a new application.
+* Add in a name, the team you want to use this on, and description information.
+* Under "Redirect URI(s)", add http://localhost:3000/oauth. This will be needed when you're logging in to the bot to add it to the team.
+* Click on "Create App".
+
+Your application has now been created. There are just a few additional settings we need to add in to get everything working:
+
+* From the left nav, click on "Bot Users". On that page, click on the button to "Add a bot to this app" and add in a default handle (e.g. ppapp).
+* From the left nav, click on "Interactive Messages". On that page, click on the button to "Enable Interactive Messages", then add in "https://paypalbot.localtunnel.me/slack/receive" within the "Request URL" field. This URI will be tied to the local tunnel we set up later in order to expose our localhost environment to the web.
+
+Lastly, we need the application credentials. Go to "App Credentials" in the left nav, and take note of the client ID and client secret, you'll need them later.
+
+### Create PayPal app
+
+Next we need to create our PayPal application to get our OAuth keys. Use the following steps for that:
+
+* Go to https://developer.paypal.com/developer/applications/, sign in, and under the "REST API apps" section click on the "Create App" button.
+* Enter an app name, select the sandbox developer account (this can just be left to whatever it defaults to), and click "Create App".
+* On the page that loads up, mark down the client ID and secret under the "Sandbox API Credentials" section, you'll need those later.
+
+### Download and Configure the code
+
+To set up and configure the bot:
+
+* Download the files in this repo to a folder.
+* In a terminal window, in the app folder, run "npm install" to fetch all dependancies.
+* Load up bot_paypal.js in an editor.
+* At the top of the file, replace the values for pp_client_id and pp_client_secret with your sandbox OAuth credentials obtained when creating your PayPal application.
+* Change the value for `redirect` with the web location of your bot code. In the case of this example, that's https://paypalbot.localtunnel.me.
+
+Now save the file and close it.
+
+### Loading the bot
+
+We now need a tool for exposing localhost to the web. We can use [localtunnel](https://www.npmjs.com/package/localtunnel) for that. Set up the tunnel like so:
+
+* In a terminal window in the application directiory, install localtunnel by typing `npm install localtunnel`.
+* Once installed, create a localtunnel to expose localhost port 3000 by typing the following command: `lt --port 3000 --subdomain paypalbot`.
+
+Now anything running at http://localhost:3000 will be accessible at https://paypalbot.localtunnel.me.
+
+In another terminal window, in the application directory, run the following command to launch the bot, making sure you replace the respective values with the client id and secret that you obtained when creating your Slack app:
+`clientId=YOUR_SLACK_CLIENT_ID clientSecret=YOUR_SLACK_CLIENT_SECRET port=3000 node bot_paypal.js`
+
+### OPTIONAL: Enable the application to accept subscriptions
+
+If you don't need subscription capabilities, skip this section. 
+
+If you need subscriptions, what we need to do next is to set up a billing plan. In PayPal, a billing plan is the architecture of a subscription. You set up the terms, amounts, etc. When you want to set up a subscription for a user, you subscribe the user to a billing plan by using a billing agreement. With that said, we need to create and activate a billing plan for the bot. Luckily, all of that functionality is available in the bot.
+
+Do the following to set up subscription functionality:
+
+* In a browser, go to https://paypalbot.localtunnel.me/createplan. 
+* This is going to create a billing plan with the default settings, and give you a plan ID. Copy the plan ID that's given.
+* Open bot_paypal.js in your editor, and search for the following line: `var billingPlan = 'YOUR ACTIVATED BILLING PLAN ID'`.
+* Replace the value there with the billing plan ID you just generated.
+* Save and close the file, then re-launch the app with the previous code: `clientId=YOUR_SLACK_CLIENT_ID clientSecret=YOUR_SLACK_CLIENT_SECRET port=3000 node bot_paypal.js`
+
+### Add the bot to Slack
+
+Our last step is to add the bot to Slack. All you need to do is, in a browser, go to http://localhost:3000/login. You will be taken through the process of adding the bot to Slack. Once you see a success message, if you go to Slack you should see a new message from a bot with the same handle that you set up when creating your Slack app. You can now communicate directly with the bot using the available commands.
+
+## Available Commands
+
+The following commands are available for DMs with the Slack bot:
+
+* *Add PayPal EMAIL*: Add a PayPal sandbox account email to your account. This email is used when making a peer to peer payment. You can create sandbox accounts at https://developer.paypal.com/developer/accounts/.
+* *pay*: Issue a simple payment to the creator of the bot. 
+* *pay @USER AMOUNT CURRENCY (e.g. pay @jcleblanc 100 USD)*: This is a peer to peer payment. When this command is used, you can make a payment from the email associated with your Slack account to the email associated with the person being paid. 
+* *subscribe*: Subscribe to a regular payment schedule with the bot owner for services.
